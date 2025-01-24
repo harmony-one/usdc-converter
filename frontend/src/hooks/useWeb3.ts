@@ -1,7 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
 import Web3 from 'web3';
 import { toast } from 'react-hot-toast';
-import { Web3State } from '@/types';
 
 export function useWeb3(): Web3State {
   const [web3, setWeb3] = useState<Web3 | null>(null);
