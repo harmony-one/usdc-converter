@@ -1,10 +1,8 @@
 import { useState, useCallback } from 'react';
 import { toast } from 'react-hot-toast';
-import { ConversionState } from '@/types';
+import { ConversionState } from '../types';
 import { useWeb3 } from './useWeb3';
-import { useTokens } from './useTokens';
-import TokenConverterABI from '@/abi/TokenConverter.json';
-import TokenABI from '@/abi/Token.json';
+import { useTokens, tokens } from './useTokens';
 
 const TOKEN_CONVERTER_ADDRESS = '0x003f4d122982ccCcb5AF817dE055E5F841509CCC';
 
