@@ -100,7 +100,65 @@ npm test
 
 4. Deploy to Harmony mainnet:
 ```bash
+# USDC Converter
+
+Unify USDC liquidity on Harmony with seamless 1:1 token conversions.
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js >= 16
+- npm or yarn
+- MetaMask wallet
+
+### Installation
+
+1. Clone the repository:
+```bash
+git clone https://github.com/ONETheo/usdc-converter.git
+cd usdc-converter
+```
+
+2. Install root project dependencies:
+```bash
+npm install
+```
+
+3. Install frontend dependencies:
+```bash
+cd frontend
+npm install
+```
+
+4. Start the development server:
+```bash
+npm run dev
+```
+
+### Smart Contract Development
+
+1. Compile contracts:
+```bash
+npm run compile
+```
+
+2. Run tests:
+```bash
+npm test
+```
+
+3. Deploy to Harmony mainnet:
+```bash
 npx hardhat run ./scripts/deploy.js --network mainnet
+```
+
+## Contract Addresses (Harmony Mainnet)
+
+- Token Converter: `0x003f4d122982ccCcb5AF817dE055E5F841509CCC`
+- Input Token 1: `0x5573264539929ed86F81bF18Ac05A99502557ACe`
+- Input Token 2: `0x4c98df6344b4b1672ca784B45a9DAa79C6133De4`
+- Output Token (USDC.e): `0x3BC1d310e8B1d52ab96D7fE43c9A90eb0EC6FE39`
 ```
 
 ## Testing
@@ -121,7 +179,6 @@ forge test
 ```
 
 ## Architecture
-
 ### Smart Contract Design
 
 The system uses a two-contract architecture:
