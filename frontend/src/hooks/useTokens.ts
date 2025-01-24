@@ -1,17 +1,16 @@
 import { useState, useCallback, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
-import { TokenState, Token } from '@/types';
+import { TokenState, Token } from '../types';
 import { useWeb3 } from './useWeb3';
-import TokenABI from '@/abi/Token.json';
 
 export const tokens: Token[] = [
-  { 
-    id: 'token1', 
+  {
+    id: 'token1',
     name: 'Input Token 1',
     address: '0x5573264539929ed86F81bF18Ac05A99502557ACe'
   },
-  { 
-    id: 'token2', 
+  {
+    id: 'token2',
     name: 'Input Token 2',
     address: '0x4c98df6344b4b1672ca784B45a9DAa79C6133De4'
   }
@@ -51,6 +50,10 @@ export function useTokens(): TokenState {
     amount,
     usdceAmount,
     selectedToken,
-    isReversed
+    isReversed,
+    setAmount,
+    setUsdceAmount,
+    setSelectedToken,
+    setIsReversed
   };
 }
