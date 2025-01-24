@@ -30,7 +30,7 @@ const App: FC = () => {
       </header>
 
       <main className="max-w-3xl mx-auto mt-12 p-4">
-        {/* Rest of your JSX remains the same, just with proper TypeScript types */}
+        {/* Rest of JSX remains the same, just with proper TypeScript types */}
       </main>
     </div>
   );
