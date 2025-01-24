@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { Toaster } from 'react-hot-toast';
-import { ArrowRightIcon } from '@heroicons/react/24/outline';
+import { ArrowRightIcon, ArrowsRightLeftIcon } from '@heroicons/react/24/outline';
 import { useWeb3 } from './hooks/useWeb3';
 import { useTokens, tokens } from './hooks/useTokens';
 import { useConversion } from './hooks/useConversion';
@@ -100,7 +100,75 @@ const App: FC = () => {
             </div>
           ) : (
             // Mobile view implementation here
-            <div>Mobile view coming soon</div>
+            <div className="space-y-6 min-h-[400px]">
+              {step === 1 && (
+                <div>
+                  <h3 className="text-xl font-medium mb-6 text-center">Select the token you have</h3>
+                  <div className="space-y-4 max-w-[280px] mx-auto">
+                    {tokens.map(token => (
+                      <button
+                        key={token.id}
+                        onClick={() => {
+                          setSelectedToken(token.id);
+                          setStep(2);
+                        }}
+                        className={`w-full relative flex items-center justify-between p-6 rounded-xl transition-all ${
+                          selectedToken === token.id ? 'bg-[#111] ring-2 ring-primary' : 'bg-[#111] hover:ring-2 hover:ring-primary/50'
+                        }`}
+                      >
+                        <span className="text-lg w-full text-center">{token.name}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {step === 2 && (
+              <div>
+                <div className="flex items-center justify-between mb-6">
+                  <button 
+                    onClick={() => setStep(1)}
+                    className="text-primary hover:text-primary-dark"
+                  >
+                    ← Back
+                  </button>
+                  <button 
+                    onClick={() => setIsReversed(!isReversed)}
+                    className="p-2 rounded-lg hover:bg-[#111] transition-colors"
+                  >
+                    <ArrowsRightLeftIcon className="h-5 w-5 text-primary" />
+                  </button>
+                </div>
+                
+                <div className="space-y-6">
+                  <TokenInput
+                    label={isReversed ? 'USDC.e' : tokens.find(t => t.id === selectedToken)?.name ?? ''}
+                    value={isReversed ? usdceAmount : amount}
+                    onChange={(value) => handleAmountChange(value, isReversed)}
+                    onMaxClick={() => handleAmountChange(balance, isReversed)}
+                  />
+                  
+                  <div className="mt-6 text-center text-gray-400">
+                    ↓ You will receive ↓
+                  </div>
+                  
+                  <TokenInput
+                    label={isReversed ? tokens.find(t => t.id === selectedToken)?.name ?? '' : 'USDC.e'}
+                    value={isReversed ? amount : usdceAmount}
+                    onChange={(value) => handleAmountChange(value, !isReversed)}
+                    onMaxClick={() => handleAmountChange(balance, !isReversed)}
+                  />
+                </div>
+
+                  <button
+                    className="w-full py-4 mt-8 bg-primary hover:brightness-110 rounded-lg transition-colors disabled:opacity-50 text-black font-medium text-lg"
+                    onClick={convert}
+                    disabled={!account || !amount || isConverting}
+                  >
+                    {isConverting ? 'Converting...' : `Convert to ${isReversed ? tokens.find(t => t.id === selectedToken)?.name ?? '' : 'USDC.e'}`}
+                  </button>
+                </div>
+              )}
+            </div>
           )}
 
           <div className="mt-8 flex justify-center">
