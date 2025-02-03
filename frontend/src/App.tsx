@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import {FC, useMemo} from 'react';
 import { Toaster } from 'react-hot-toast';
 import { ArrowRightIcon, ArrowsRightLeftIcon } from '@heroicons/react/24/outline';
 import { useWeb3 } from './hooks/useWeb3';
@@ -7,19 +7,20 @@ import { useConversion } from './hooks/useConversion';
 import { useViewport } from './hooks/useViewport';
 import { TokenInput } from './components/TokenInput';
 import { TokenSelector } from './components/TokenSelector';
+import {parseUnits} from "ethers/lib/utils";
 
 const App: FC = () => {
   const { web3, account, isConnecting, connect } = useWeb3();
-  const { 
-    balance, 
-    amount, 
-    usdceAmount, 
-    selectedToken, 
+  const {
+    balance,
+    amount,
+    usdceAmount,
+    selectedToken,
     isReversed,
     setAmount,
     setUsdceAmount,
     setSelectedToken,
-    setIsReversed 
+    setIsReversed
   } = useTokens();
   const { isConverting, convert } = useConversion();
   const { isMobileView, step, setStep } = useViewport();
@@ -34,10 +35,22 @@ const App: FC = () => {
     }
   };
 
+  const validationError = useMemo(() => {
+    const parsedBalance = parseUnits(balance || '0')
+    const parsedAmount = parseUnits(amount || '0')
+
+    if(parsedAmount.gt(0)) {
+      if(parsedAmount.gt(parsedBalance)) {
+        return 'Insufficient Balance'
+      }
+    }
+    return ''
+  }, [balance, amount])
+
   return (
     <div className="min-h-screen bg-background text-white">
       <Toaster position="top-right" />
-      
+
       <header className="p-4 flex justify-between items-center">
         <h1 className="text-2xl font-medium">USDC Converter</h1>
         <button
@@ -79,7 +92,7 @@ const App: FC = () => {
 
               {/* Arrow */}
               <div className="self-start mt-[100px] -mx-4">
-                <button 
+                <button
                   onClick={() => setIsReversed(!isReversed)}
                   className={`p-3 rounded-full hover:bg-[#111] transition-all duration-200 transform ${isReversed ? '-rotate-180' : ''}`}
                 >
@@ -125,20 +138,19 @@ const App: FC = () => {
               {step === 2 && (
               <div>
                 <div className="flex items-center justify-between mb-6">
-                  <button 
+                  <button
                     onClick={() => setStep(1)}
                     className="text-primary hover:text-primary-dark"
                   >
                     ← Back
                   </button>
-                  <button 
+                  <button
                     onClick={() => setIsReversed(!isReversed)}
                     className="p-2 rounded-lg hover:bg-[#111] transition-colors"
                   >
                     <ArrowsRightLeftIcon className="h-5 w-5 text-primary" />
                   </button>
                 </div>
-                
                 <div className="space-y-6">
                   <TokenInput
                     label={isReversed ? 'USDC.e' : tokens.find(t => t.id === selectedToken)?.name ?? ''}
@@ -146,11 +158,11 @@ const App: FC = () => {
                     onChange={(value) => handleAmountChange(value, isReversed)}
                     onMaxClick={() => handleAmountChange(balance, isReversed)}
                   />
-                  
+
                   <div className="mt-6 text-center text-gray-400">
                     ↓ You will receive ↓
                   </div>
-                  
+
                   <TokenInput
                     label={isReversed ? tokens.find(t => t.id === selectedToken)?.name ?? '' : 'USDC.e'}
                     value={isReversed ? amount : usdceAmount}
@@ -162,7 +174,7 @@ const App: FC = () => {
                   <button
                     className="w-full py-4 mt-8 bg-primary hover:brightness-110 rounded-lg transition-colors disabled:opacity-50 text-black font-medium text-lg"
                     onClick={convert}
-                    disabled={!account || !amount || isConverting}
+                    disabled={!account || !amount || isConverting || Boolean(validationError)}
                   >
                     {isConverting ? 'Converting...' : `Convert to ${isReversed ? tokens.find(t => t.id === selectedToken)?.name ?? '' : 'USDC.e'}`}
                   </button>
@@ -177,9 +189,13 @@ const App: FC = () => {
                 amount ? 'bg-[#0AB7D4] hover:brightness-110' : 'bg-[#226978]'
               } rounded-lg transition-colors disabled:opacity-50 text-black font-medium text-lg`}
               onClick={convert}
-              disabled={!account || !amount || isConverting}
+              disabled={!account || !amount || isConverting || Boolean(validationError)}
             >
-              {isConverting ? 'Converting...' : `Convert to ${isReversed ? tokens.find(t => t.id === selectedToken)?.name ?? '' : 'USDC.e'}`}
+              {isConverting
+                ? 'Converting...'
+                : validationError
+                  ? validationError
+                  : `Convert to ${isReversed ? tokens.find(t => t.id === selectedToken)?.name ?? '' : 'USDC.e'}`}
             </button>
           </div>
         </div>
