@@ -20,6 +20,10 @@ export interface TokenState {
   usdceAmount: string;
   selectedToken: string;
   isReversed: boolean;
+  setAmount: (amount: string) => void
+  setUsdceAmount: (amount: string) => void
+  setSelectedToken: (token: string) => void
+  setIsReversed: (isReversed: boolean) => void
 }
 
 export interface ConversionState {
