@@ -4,6 +4,7 @@ export interface Token {
   id: string;
   name: string;
   address: string;
+  link: string;
 }
 
 export interface Web3State {
@@ -28,7 +29,7 @@ export interface TokenState {
 
 export interface ConversionState {
   isConverting: boolean;
-  convert: () => Promise<void>;
+  convert: (number: string) => Promise<void>;
 }
 
 export interface ViewState {
