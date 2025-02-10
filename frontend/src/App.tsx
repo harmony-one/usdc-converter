@@ -1,4 +1,4 @@
-import {FC, useMemo} from 'react';
+import {FC, useEffect, useMemo} from 'react';
 import { Toaster } from 'react-hot-toast';
 import { ArrowRightIcon, ArrowsRightLeftIcon } from '@heroicons/react/24/outline';
 import { useWeb3 } from './hooks/useWeb3';
@@ -8,6 +8,7 @@ import { useViewport } from './hooks/useViewport';
 import { TokenInput } from './components/TokenInput';
 import { TokenSelector } from './components/TokenSelector';
 import {parseUnits} from "ethers/lib/utils";
+import { useSearchParams } from 'react-router-dom';
 
 const App: FC = () => {
   const { web3, account, isConnecting, connect } = useWeb3();
@@ -24,6 +25,18 @@ const App: FC = () => {
   } = useTokens();
   const { isConverting, convert } = useConversion();
   const { isMobileView, step, setStep } = useViewport();
+
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const queryToken = searchParams.get('token');
+
+  useEffect(() => {
+    const token = tokens.find(t => t.address === queryToken);
+
+    if(queryToken && token && token.id !== selectedToken) {
+      setSelectedToken(token?.id);
+    }
+  }, [queryToken, selectedToken]);
 
   const handleAmountChange = (value: string, isUsdce: boolean = false) => {
     if (isUsdce) {
@@ -71,19 +84,24 @@ const App: FC = () => {
         </div>
 
         <div className="bg-[#1A1A1A] rounded-2xl p-6 md:p-10">
+        <TokenSelector
+            tokens={tokens}
+            selectedToken={selectedToken}
+            onChange={(value) => {
+              setSelectedToken(value);
+              const token = tokens.find(t => t.id === value)?.address || '';
+              setSearchParams({ token })
+            }}
+          />
           {!isMobileView ? (
             <div className="grid grid-cols-[1fr,auto,1fr] gap-8 items-center">
               {/* From side */}
               <div>
                 <div className="h-[44px] mb-4">
-                  <TokenSelector
-                    tokens={tokens}
-                    selectedToken={selectedToken}
-                    onChange={(value) => setSelectedToken(value)}
-                  />
                 </div>
                 <TokenInput
                   label={tokens.find(t => t.id === selectedToken)?.name ?? ''}
+                  balance={balance}
                   value={isReversed ? usdceAmount : amount}
                   onChange={(value) => handleAmountChange(value, isReversed)}
                   onMaxClick={() => handleAmountChange(balance, isReversed)}
@@ -93,7 +111,7 @@ const App: FC = () => {
               {/* Arrow */}
               <div className="self-start mt-[100px] -mx-4">
                 <button
-                  onClick={() => setIsReversed(!isReversed)}
+                  // onClick={() => setIsReversed(!isReversed)}
                   className={`p-3 rounded-full hover:bg-[#111] transition-all duration-200 transform ${isReversed ? '-rotate-180' : ''}`}
                 >
                   <ArrowRightIcon className="h-6 w-6 text-primary" />
@@ -173,7 +191,7 @@ const App: FC = () => {
 
                   <button
                     className="w-full py-4 mt-8 bg-primary hover:brightness-110 rounded-lg transition-colors disabled:opacity-50 text-black font-medium text-lg"
-                    onClick={convert}
+                    onClick={() => convert(amount)}
                     disabled={!account || !amount || isConverting || Boolean(validationError)}
                   >
                     {isConverting ? 'Converting...' : `Convert to ${isReversed ? tokens.find(t => t.id === selectedToken)?.name ?? '' : 'USDC.e'}`}
@@ -188,7 +206,7 @@ const App: FC = () => {
               className={`${isMobileView ? 'hidden' : 'block'} px-12 py-4 ${
                 amount ? 'bg-[#0AB7D4] hover:brightness-110' : 'bg-[#226978]'
               } rounded-lg transition-colors disabled:opacity-50 text-black font-medium text-lg`}
-              onClick={convert}
+              onClick={() => convert(amount)}
               disabled={!account || !amount || isConverting || Boolean(validationError)}
             >
               {isConverting

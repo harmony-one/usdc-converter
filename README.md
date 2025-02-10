@@ -29,10 +29,15 @@ The project consists of two main smart contracts:
 
 ### Deployed Addresses (Harmony Mainnet)
 
-- Token Converter: `0x003f4d122982ccCcb5AF817dE055E5F841509CCC`
-- Input Token 1: `0x5573264539929ed86F81bF18Ac05A99502557ACe`
-- Input Token 2: `0x4c98df6344b4b1672ca784B45a9DAa79C6133De4`
-- Output Token (USDC.e): `0x3BC1d310e8B1d52ab96D7fE43c9A90eb0EC6FE39`
+Deploying MintableToken contracts...
+Output Token deployed at: 0x2c3f52032456ce43e8B61f64c260BC8E3AfD2Fd1
+Input Token 1 deployed at: 0x0638201b56B2127Dc662127F0DFF6bF282044017
+Input Token 2 deployed at: 0x476C6a0BEb08Cf2fa9de42347b1426Eff2f60D6a
+Deploying TokenConverter contract...
+TokenConverter deployed at: 0x60A9bf01b3203A9F8f5c7F183163C3b52EE14f0A
+Transferring ownership of the output token to the TokenConverter contract...
+Ownership transferred.
+Deployment and initialization complete!
 
 ## Tech Stack
 

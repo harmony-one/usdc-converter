@@ -23,8 +23,18 @@ async function main() {
     // 2. Deploy TokenConverter contract
     console.log("Deploying TokenConverter contract...");
     const TokenConverter = await ethers.getContractFactory("TokenConverter");
+
+    const whiteList = [
+        "0xBC594CABd205bD993e7FfA6F3e9ceA75c1110da5",
+        "0x44cED87b9F1492Bf2DCf5c16004832569f7f6cBa",
+        "0x9b5fae311A4A4b9d838f301C9c27b55d19BAa4Fb",
+        "0xC8468C26345dcC4DaE328BeFA0e8cF4Dd968BEa9",
+        "0x9c5C877DB2A5a37733Fe1a0bdcae8411Cdc8c5B3"
+    ];
+
     const tokenConverter = await TokenConverter.deploy(
-        [inputToken1.address, inputToken2.address],
+        // [inputToken1.address, inputToken2.address],
+        whiteList,
         outputToken.address
     );
     await tokenConverter.deployed();
@@ -35,6 +45,8 @@ async function main() {
     const transferTx = await outputToken.transferOwnership(tokenConverter.address);
     await transferTx.wait();
     console.log("Ownership transferred.");
+
+    /*
 
     // 4. Mint tokens to a test user
     console.log("Minting input tokens to a test user...");
@@ -47,6 +59,7 @@ async function main() {
     const mintTx2 = await inputToken2.mint(deployer.address, ethers.utils.parseEther("1000"));
     await mintTx2.wait();
     console.log(`Minted 1000 IN2 tokens to: ${deployer.address}`);
+    */
 
     console.log("Deployment and initialization complete!");
 }

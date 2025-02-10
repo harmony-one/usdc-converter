@@ -1,4 +1,4 @@
 export const appConfig = {
-  inputToken1Address: '0x5E44169Cf741905397FD51aA46dfF2801236F26C',
-  inputToken2Address: '0x3e70Ac660F8f4C1eA2f099c7616d5C48C4d22654',
+  inputToken1Address: '0x1281aff0Ae10Fb460D311b1F4452Fa67Dca7f8d0',
+  inputToken2Address: '0x11BEdcef4795F3a5C27ae3B7d2380720996BddEc',
 }
